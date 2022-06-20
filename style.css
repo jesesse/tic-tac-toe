@@ -1,0 +1,28 @@
+.container{
+    display: flex;
+    flex-flow: column;
+    width: 80%;
+    height: 100vh;
+    margin: auto;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.gameboard {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+}
+
+.square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    border: 1px solid black;
+}
+
+.set-up-game {
+    display: none;
+}
