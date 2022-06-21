@@ -1,93 +1,61 @@
 const newGameBtn = document.querySelector(".new-game-btn"); 
-let playerTurn = 0;
 
+
+//FACTORY FUNCTION FOR PLAYER
+const player = function(mark) {
+
+    return {
+        mark  
+    }
+}
+
+
+//GAME CONTROL GAMEFLOW AND LOGIC
 const game = (() => {
 
+    let player1;
+    let player2;
+    let currentPlayer;
+
     function newGame() {
-        playerTurn = 0;
         gameboard.clearGameboard();
         gameboard.createGameboard();
         gameboard.renderGameboard();
+        player1 = player("X");
+        player2 = player("O");  
+        currentPlayer = player1;
+    }
+
+    function setMark() {
+        if (this.textContent) return;
+        this.textContent = currentPlayer.mark; 
+        checkGame();
+        changeCurrentPlayer();   
+    }
+
+    function changeCurrentPlayer(){
+        if(currentPlayer == player1) currentPlayer = player2;
+        else currentPlayer = player1;
+    }
+
+    function gameOver() {
+        alert("se oli siinä")
     }
 
     function checkGame() {
-        if (gameboard.getArray()[0].textContent == 'X' && gameboard.getArray()[3].textContent == 'X' && gameboard.getArray()[6].textContent == 'X') {
-            gameboard.renderGameboard();
-            
-        }
-        if (gameboard.getArray()[1].textContent == 'X' && gameboard.getArray()[4].textContent == 'X' && gameboard.getArray()[7].textContent == 'X') {
-            alert("X wins")
-            game.newGame();
-        }
-        if (gameboard.getArray()[2].textContent == 'X' && gameboard.getArray()[5].textContent == 'X' && gameboard.getArray()[8].textContent == 'X') {
-            alert("X wins")
-            game.newGame();
-        }
+        if (gameboard.getArray()[0].textContent == 'X' && gameboard.getArray()[3].textContent == 'X' && gameboard.getArray()[6].textContent == 'X') gameOver();
 
-        if (gameboard.getArray()[0].textContent == 'X' && gameboard.getArray()[1].textContent == 'X' && gameboard.getArray()[2].textContent == 'X') {
-            alert("X wins")
-            game.newGame();
-        }
-        if (gameboard.getArray()[3].textContent == 'X' && gameboard.getArray()[4].textContent == 'X' && gameboard.getArray()[5].textContent == 'X') {
-            alert("X wins")
-            game.newGame();
-        }
-        if (gameboard.getArray()[6].textContent == 'X' && gameboard.getArray()[7].textContent == 'X' && gameboard.getArray()[8].textContent == 'X') {
-            alert("X wins")
-            game.newGame();
-        }
-
-        if (gameboard.getArray()[0].textContent == 'X' && gameboard.getArray()[4].textContent == 'X' && gameboard.getArray()[8].textContent == 'X') {
-            alert("X wins")
-            game.newGame();
-        }
-        if (gameboard.getArray()[2].textContent == 'X' && gameboard.getArray()[4].textContent == 'X' && gameboard.getArray()[6].textContent == 'X') {
-            alert("X wins")
-            game.newGame();
-        }
-
-        if (gameboard.getArray()[0].textContent == 'O' && gameboard.getArray()[3].textContent == 'O' && gameboard.getArray()[6].textContent == 'O') {
-            alert("O wins")
-            game.newGame();
-        }
-        if (gameboard.getArray()[1].textContent == 'O' && gameboard.getArray()[4].textContent == 'O' && gameboard.getArray()[7].textContent == 'O') {
-            alert("O wins")
-            game.newGame();
-        }
-        if (gameboard.getArray()[2].textContent == 'O' && gameboard.getArray()[5].textContent == 'O' && gameboard.getArray()[8].textContent == 'O') {
-            alert("O wins")
-            game.newGame();
-        }
-
-        if (gameboard.getArray()[0].textContent == 'O' && gameboard.getArray()[1].textContent == 'O' && gameboard.getArray()[2].textContent == 'O') {
-            alert("O wins")
-            game.newGame();
-        }
-        if (gameboard.getArray()[3].textContent == 'O' && gameboard.getArray()[4].textContent == 'O' && gameboard.getArray()[5].textContent == 'O') {
-            alert("O wins")
-            game.newGame();
-        }
-        if (gameboard.getArray()[6].textContent == 'O' && gameboard.getArray()[7].textContent == 'O' && gameboard.getArray()[8].textContent == 'O') {
-            alert("O wins")
-            game.newGame();
-        }
-
-        if (gameboard.getArray()[0].textContent == 'O' && gameboard.getArray()[4].textContent == 'O' && gameboard.getArray()[8].textContent == 'O') {
-            alert("O wins")
-            game.newGame();
-        }
-        if (gameboard.getArray()[2].textContent == 'O' && gameboard.getArray()[4].textContent == 'O' && gameboard.getArray()[6].textContent == 'O') {
-            alert("O wins")
-            game.newGame();
-        }
     }
 
     return {
         newGame,
-        checkGame
+        checkGame,
+        changeCurrentPlayer,
+        setMark
     }
     
 })();
+
 
 //MODULE FOR GAMEBOARD
 const gameboard = (() => {
@@ -108,7 +76,7 @@ const gameboard = (() => {
             let newSquare = document.createElement('div');
             newSquare.classList.add('square')
             newSquare.setAttribute('id', i);
-            newSquare.addEventListener("click", setMark);
+            newSquare.addEventListener("click", game.setMark);
             gameboardArray.push(newSquare); 
         }
     }
@@ -120,21 +88,6 @@ const gameboard = (() => {
         }
     }
 
-    function setMark() {
-        let player;
-        if (this.textContent) return;
-        if (playerTurn == 0) {
-            player = player1;
-            playerTurn = 1;
-        } else {
-            player = player2;
-            playerTurn = 0;
-        }
-        gameboardArray[this.getAttribute('id')].textContent = player.getMark();
-        game.checkGame();
-    }
-    
-
     return {
         clearGameboard,
         createGameboard,
@@ -145,20 +98,8 @@ const gameboard = (() => {
 })();
 
 
-//FACTORY FUNCTION FOR PLAYER
-const player = function(mark) {
-    
-    function getMark() {
-        return mark;
-    }
- 
-    return {
-        getMark,
-        
-    }
-}
-
-let player1 = player("X");
-let player2 = player("O");
-
 newGameBtn.addEventListener("click", game.newGame);
+
+
+
+
