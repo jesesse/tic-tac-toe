@@ -10,7 +10,7 @@ const player = function(mark) {
 }
 
 
-//GAME CONTROL GAMEFLOW AND LOGIC
+//GAME CONTROLS GAMEFLOW AND LOGIC
 const game = (() => {
 
     let player1;
@@ -26,11 +26,8 @@ const game = (() => {
         currentPlayer = player1;
     }
 
-    function setMark() {
-        if (this.textContent) return;
-        this.textContent = currentPlayer.mark; 
-        checkGame();
-        changeCurrentPlayer();   
+    function getCurrentPlayer(){
+        return currentPlayer;
     }
 
     function changeCurrentPlayer(){
@@ -38,20 +35,20 @@ const game = (() => {
         else currentPlayer = player1;
     }
 
-    function gameOver() {
-        alert("se oli siinä")
+    function checkGame() {
+        if (gameboard.getArray()[0].textContent == 'X' && gameboard.getArray()[3].textContent == 'X' && gameboard.getArray()[6].textContent == 'X') 
+        gameOver();
     }
 
-    function checkGame() {
-        if (gameboard.getArray()[0].textContent == 'X' && gameboard.getArray()[3].textContent == 'X' && gameboard.getArray()[6].textContent == 'X') gameOver();
-
+    function gameOver() {
+        alert("se oli siinä")
     }
 
     return {
         newGame,
         checkGame,
         changeCurrentPlayer,
-        setMark
+        getCurrentPlayer
     }
     
 })();
@@ -76,10 +73,19 @@ const gameboard = (() => {
             let newSquare = document.createElement('div');
             newSquare.classList.add('square')
             newSquare.setAttribute('id', i);
-            newSquare.addEventListener("click", game.setMark);
+            newSquare.addEventListener("click", setMark);
             gameboardArray.push(newSquare); 
         }
     }
+
+
+    function setMark() {
+        if (this.textContent) return;
+        this.textContent = game.getCurrentPlayer().mark;  
+        game.changeCurrentPlayer();  
+        //game.checkGame(); 
+    }
+    
 
     function renderGameboard() {
         while (gameboardContainer.lastChild) gameboardContainer.removeChild(gameboardContainer.lastChild);
